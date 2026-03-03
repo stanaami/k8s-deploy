@@ -1,0 +1,19 @@
+# kind関連
+kind-*
+
+# kubectl設定（ローカルのみ）
+.kube/
+
+# 一時ファイル
+*.tmp
+*.log
+*.swp
+*~
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.iml
