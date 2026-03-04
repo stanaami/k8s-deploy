@@ -192,6 +192,87 @@ brew install helm
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 ```
 
+### NamespaceやPodがPort.ioに表示されない場合
+
+Port.ioダッシュボードで「K8s Namespaces」や「K8s Pods」が表示されない、または黄色の警告ドットが表示される場合、以下の手順で解決してください：
+
+**問題の原因:**
+- Port.ioのブループリント設定で`k8s_namespace`、`k8s_workload`、`k8s_pod`が存在しない、または正しく設定されていない
+- Namespaceが同期されていないため、その配下のリソース（Deployment、Pod）も同期できない
+- エージェントのログに「Entity with identifier ... does not exist in the blueprint」というエラーが表示される
+
+**診断手順:**
+
+1. **診断スクリプトを実行**
+   ```bash
+   ./scripts/diagnose-portio-sync.sh
+   ```
+   このスクリプトは以下を確認します：
+   - エージェントの状態
+   - エラーログ
+   - クラスター内のリソース
+   - エージェントの設定
+
+2. **エージェントのログを直接確認**
+   ```bash
+   # エージェントのログを確認（test-clusterの場合）
+   kubectl logs -n port-k8s-exporter -l app.kubernetes.io/name=port-k8s-exporter,app.kubernetes.io/instance=test-cluster --tail=100
+   
+   # エラーのみを確認
+   kubectl logs -n port-k8s-exporter -l app.kubernetes.io/name=port-k8s-exporter,app.kubernetes.io/instance=test-cluster --tail=100 | grep -iE "error|failed|not found|does not exist|blueprint"
+   ```
+
+**解決方法:**
+
+1. **Port.ioダッシュボードでブループリントを確認**
+   - URL: https://app.port.io/builder/blueprints
+   - または、左上の「Port」ロゴの横のドロップダウンから「Builder」→「Blueprints」を選択
+   - 以下のブループリントが存在するか確認：
+     - `k8s_namespace`
+     - `k8s_workload`
+     - `k8s_pod`
+     - `k8s_cluster`
+     - `k8s_replicaset`
+     - `k8s_node`
+
+2. **Kubernetes統合テンプレートを適用（推奨）**
+   - URL: https://app.port.io/settings/integrations/kubernetes
+   - または、右上の歯車アイコン「Builder」→「Settings」→「Integrations」→「Kubernetes」
+   - 「Set up integration」または「Configure」をクリック
+   - Kubernetes統合テンプレートを適用（すべてのブループリントが自動的に作成されます）
+   - これにより、必要なブループリントとマッピングが自動的に設定されます
+
+3. **エージェントを再起動して再同期**
+   ```bash
+   # test-clusterの場合
+   kubectl rollout restart deployment/test-cluster-port-k8s-exporter -n port-k8s-exporter
+   
+   # または、Helmでアップグレード
+   helm upgrade test-cluster port-labs/port-k8s-exporter \
+     --namespace port-k8s-exporter \
+     --reuse-values
+   ```
+
+4. **再起動後、ログを監視**
+   ```bash
+   # リアルタイムでログを確認
+   kubectl logs -n port-k8s-exporter -l app.kubernetes.io/name=port-k8s-exporter,app.kubernetes.io/instance=test-cluster --tail=50 -f
+   ```
+   - エラーが解消され、正常に同期されていることを確認
+   - 「Synced」や「upserted」などの成功メッセージが表示されることを確認
+
+5. **Port.ioダッシュボードで確認**
+   - Data sources セクションで「Kubernetes - test-cluster」を確認
+   - 各エンティティタイプ（K8s Namespace、K8s Podなど）のドットが緑色になることを確認
+   - Catalog セクションで実際のリソースが表示されることを確認
+
+**注意事項:**
+- エージェントは60秒ごとにポーリングします
+- 変更後、最大60秒待つ必要があります
+- Port.ioダッシュボードをリフレッシュしてください
+
+詳細は `docs/portio-namespace-sync-issue.md` を参照してください。
+
 ## 参考リンク
 
 - [Port.io公式ドキュメント](https://docs.port.io/)

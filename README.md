@@ -201,6 +201,32 @@ export PORT_CLIENT_SECRET="your-client-secret"
 
 詳細な手順は `portio-connection.md` を参照してください。
 
+### Port.io同期の問題
+
+NamespaceやPodがPort.ioに表示されない場合：
+
+```bash
+# 1. 診断スクリプトを実行
+./scripts/diagnose-portio-sync.sh
+
+# 2. ブループリント設定を修正（対話式）
+./scripts/fix-portio-blueprints.sh
+```
+
+**主な原因と解決方法:**
+
+1. **ブループリントが存在しない**
+   - Port.ioダッシュボードでKubernetes統合テンプレートを適用
+   - URL: https://app.port.io/settings/integrations/kubernetes
+   - 「Set up integration」をクリック
+
+2. **エージェントの再起動が必要**
+   ```bash
+   kubectl rollout restart deployment/test-cluster-port-k8s-exporter -n port-k8s-exporter
+   ```
+
+詳細は `portio-connection.md` の「トラブルシューティング」セクションを参照してください。
+
 ## 参考リンク
 
 - [kind公式ドキュメント](https://kind.sigs.k8s.io/)
