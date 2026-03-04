@@ -1,0 +1,12 @@
+# The following script will install a K8s integration at your K8s cluster using helm
+# stateKey: Change the stateKey to describe your integration
+helm repo add --force-update port-labs https://port-labs.github.io/helm-charts
+helm upgrade --install my-cluster port-labs/port-k8s-exporter \
+--create-namespace --namespace port-k8s-exporter \
+	--set secret.secrets.portClientId="7f6G1SyzxdpGC09ddwuBvQiYc0MIEnpu"  \
+	--set secret.secrets.portClientSecret="uSmHEGFPYZPI8CN7ZA7dwTQsjsIv10kIwwLc0ddd8NKtXLRIozR0JN96cTmYrvYE"  \
+	--set portBaseUrl="https://api.port.io"  \
+	--set stateKey="my-cluster"  \
+	--set eventListener.type="POLLING"  \
+	--set "extraEnv[0].name"="CLUSTER_NAME"  \
+	--set "extraEnv[0].value"="my-cluster" 

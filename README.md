@@ -181,7 +181,28 @@ git branch -M main
 git push -u origin main
 ```
 
+## Port.ioへの接続
+
+kindクラスターをPort.io環境に接続する手順については、[portio-connection.md](./portio-connection.md)を参照してください。
+
+### クイックスタート
+
+```bash
+# 1. Helmをインストール（まだの場合）
+brew install helm
+
+# 2. Port.ioダッシュボードから取得した認証情報を設定
+export PORT_CLIENT_ID="your-client-id"
+export PORT_CLIENT_SECRET="your-client-secret"
+
+# 3. エージェントをインストール
+./scripts/install-portio-agent.sh
+```
+
+詳細な手順は `portio-connection.md` を参照してください。
+
 ## 参考リンク
 
 - [kind公式ドキュメント](https://kind.sigs.k8s.io/)
 - [Kubernetes公式ドキュメント](https://kubernetes.io/docs/)
+- [Port.io公式ドキュメント](https://docs.port.io/)
