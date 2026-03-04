@@ -1,4 +1,6 @@
-# Kubernetes検証環境（kind）
+# k8s-deploy
+
+ローカルにk8sクラスタをデプロイ（kind）
 
 このプロジェクトは、kind（Kubernetes in Docker）を使用したKubernetes検証環境です。
 

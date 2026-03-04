@@ -33,13 +33,13 @@ git commit -m "Initial commit: kind Kubernetes testing environment" || {
     echo "⚠️  コミットする変更がありません（既にコミット済みの可能性があります）"
 }
 
-# リモートの確認と追加
+# リモートの確認と追加（SSHを使用）
 if git remote get-url origin &> /dev/null; then
     echo "🔄 既存のリモートを更新しています..."
-    git remote set-url origin "https://github.com/${USERNAME}/${REPO_NAME}.git"
+    git remote set-url origin "git@github.com:${USERNAME}/${REPO_NAME}.git"
 else
     echo "➕ リモートリポジトリを追加しています..."
-    git remote add origin "https://github.com/${USERNAME}/${REPO_NAME}.git"
+    git remote add origin "git@github.com:${USERNAME}/${REPO_NAME}.git"
 fi
 
 # ブランチ名をmainに設定
