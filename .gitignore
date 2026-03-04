@@ -17,3 +17,7 @@ kind-*
 .vscode/
 .idea/
 *.iml
+
+# Port.io認証情報（機密情報を含む可能性があるファイル）
+# portio-agent.yaml に認証情報が含まれている場合は、この行のコメントを外してください
+# portio-agent.yaml
