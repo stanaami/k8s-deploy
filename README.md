@@ -227,8 +227,31 @@ NamespaceやPodがPort.ioに表示されない場合：
 
 詳細は `portio-connection.md` の「トラブルシューティング」セクションを参照してください。
 
+## CAST AIへの接続
+
+kindクラスターをCAST AIに接続して、自動最適化とコスト削減を有効にします。
+
+### クイックスタート
+
+```bash
+# 1. CAST AI APIトークンを設定
+export CASTAI_API_TOKEN="your-api-token-here"
+
+# 2. 接続スクリプトを実行
+./scripts/connect-castai.sh
+```
+
+### CAST AI APIトークンの取得
+
+1. CAST AIダッシュボードにログイン: https://console.cast.ai
+2. Settings > API Tokens に移動
+3. 新しいトークンを作成または既存のトークンをコピー
+
+詳細な手順は `docs/castai-connection.md` を参照してください。
+
 ## 参考リンク
 
 - [kind公式ドキュメント](https://kind.sigs.k8s.io/)
 - [Kubernetes公式ドキュメント](https://kubernetes.io/docs/)
 - [Port.io公式ドキュメント](https://docs.port.io/)
+- [CAST AI公式ドキュメント](https://docs.cast.ai/)
